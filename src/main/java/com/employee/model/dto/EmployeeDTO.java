@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EmployeeDTO implements Serializable {
 
-	private long empId;
+	private Long empId;
 	private String empName;
 	private double salary;
 	

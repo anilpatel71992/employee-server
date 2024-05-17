@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,7 +15,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.employee.model.dto.EmployeeDTO;
+import com.employee.utils.AppUtils.Activity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,15 +29,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Employee implements Serializable {
-
+public class ActivityLog implements Serializable {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long empId;
+	private Long id;
+
+	private String actor, entityType;
 	
-	private String empName;
+	@Enumerated(EnumType.STRING)
+	private Activity activity;
 	
-	private double salary;
+	@Column(columnDefinition="MediumText")
+	private String oldValue, newValue, error;
+
+	private Long entityId;
+	
+	private String apiRequest, requestStatus;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(insertable = true, updatable = false)
@@ -51,9 +61,18 @@ public class Employee implements Serializable {
 	@Column(insertable = false, updatable = true)
 	private String lastModifiedBy;
 	
-	public Employee(EmployeeDTO employeeDTO) {
-		this.empName = employeeDTO.getEmpName();
-		this.salary = employeeDTO.getSalary();
+	public ActivityLog(String actor, Class entityType, Activity activity, String oldValue, String newValue,	Long entityId, String apiRequest, 
+			String requestStatus, String error) {
+		super();
+		this.actor = actor;
+		this.entityType = entityType.getSimpleName();
+		this.activity = activity;
+		this.oldValue = oldValue;
+		this.newValue = newValue;
+		this.entityId = entityId;
+		this.apiRequest = apiRequest;
+		this.requestStatus = requestStatus;
+		this.error = error;
 	}
 	
 	@PreUpdate
@@ -68,4 +87,5 @@ public class Employee implements Serializable {
 		setCreatedDate(new Date());
 		setCreatedBy("Anonymous");
 	}
+	
 }

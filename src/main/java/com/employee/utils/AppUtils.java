@@ -5,6 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AppUtils {
 
+	public static enum Activity {
+		Add,
+		Update,
+		Delete,
+		Fetch
+	}
+	
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	
 	public static String writeValueAsString(Object object) throws Exception {
