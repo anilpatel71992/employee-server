@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.employee.model.dto.EmployeeDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +24,9 @@ public class Employee {
 	private long empId;
 	private String empName;
 	private double salary;
+	
+	public Employee(EmployeeDTO employeeDTO) {
+		this.empName = employeeDTO.getEmpName();
+		this.salary = employeeDTO.getSalary();
+	}
 }

@@ -14,6 +14,7 @@ import com.employee.service.EmployeeService;
 import com.employee.utils.ApiResponse;
 import com.employee.utils.AppUtils;
 import com.employee.utils.Constant;
+import com.employee.validation.EmployeeValidation;
 
 @RestController
 public class EmployeeController {
@@ -22,13 +23,16 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 
 	@RequestMapping(value = "/employee/add", method = RequestMethod.POST)
-	public ApiResponse addEmployee(@RequestBody EmployeeDTO employeeDTO) {
+	public ApiResponse addEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
 		System.out.println("Calling add API...");
 		ApiResponse apiResponse = new ApiResponse();
 		try {
 			System.out.println(AppUtils.writeValueAsString(employeeDTO));
+			if(Constant.FAILED.equals(EmployeeValidation.addEmployeeValidation(employeeDTO, apiResponse).getStatus())) {
+				return apiResponse;
+			}
 			
-			Employee  employee = Employee.builder().empName(employeeDTO.getEmpName()).salary(employeeDTO.getSalary()).build();
+			Employee employee = new Employee(employeeDTO);
 			employee = employeeService.saveEmployee(employee);
 			apiResponse.setResponse(new EmployeeDTO(employee));
 		} catch (Exception e) {
@@ -41,10 +45,13 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping(value = "/employee/fetch", method = RequestMethod.GET)
-	public ApiResponse fetchEmployeeDetails(@RequestParam long empId) {
+	public ApiResponse fetchEmployeeDetails(@RequestParam(required = true) long empId) {
 		System.out.println("Calling fetch API...");
 		ApiResponse apiResponse = new ApiResponse();
 		try {
+			if(Constant.FAILED.equals(EmployeeValidation.fetchEmployeeValidation(empId, apiResponse).getStatus())) {
+				return apiResponse;
+			}
 			Employee employee = employeeService.getEmployeeById(empId);
 			if(employee == null) {
 				apiResponse.setStatus(Constant.FAILED);
