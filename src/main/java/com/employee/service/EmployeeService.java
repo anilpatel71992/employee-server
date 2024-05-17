@@ -1,6 +1,7 @@
 package com.employee.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,26 +9,17 @@ import com.employee.model.Employee;
 import com.employee.repository.EmployeeRepository;
 
 @Service
+@Transactional
 public class EmployeeService {
 
-//	private final EmployeeRepository employeeRepository;
-//	
-//	@Autowired
-//	public EmployeeService(final EmployeeRepository employeeRepository) {
-//	    this.employeeRepository = employeeRepository;
-//	}
+	@Resource
+	private EmployeeRepository employeeRepository;
 	
-	@Autowired
-	public EmployeeService() {
-		//this.employeeRepository = null;
-	}
-	
-	@Transactional
 	public Employee saveEmployee(Employee employee) {
-		return new Employee(); //return employeeRepository.save(employee);
+		return employeeRepository.save(employee);
 	}
 	
 	public Employee getEmployeeById(long id) {
-		return new Employee();  //return employeeRepository.findByEmpId(id);
+		return employeeRepository.findByEmpId(id);
 	}
 }
